@@ -1,0 +1,117 @@
+.print-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: 1rem;
+}
+
+.print-controls {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.print-page {
+  background: white;
+  margin: 0 auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.print-header {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.print-divider {
+  border-top: 1px dashed #999;
+  margin: 8px 0;
+}
+
+.print-customer p {
+  margin: 2px 0;
+}
+
+.print-table {
+  width: 100%;
+  border-collapse: collapse;
+  display: table;
+  white-space: normal;
+}
+
+.print-table th,
+.print-table td {
+  padding: 4px 6px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+[dir="rtl"] .print-table th,
+[dir="rtl"] .print-table td {
+  text-align: right;
+}
+
+.print-table th {
+  font-weight: bold;
+  background: none;
+  border-bottom: 1px solid #333;
+}
+
+.print-totals {
+  margin-top: 8px;
+}
+
+.print-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.print-grand-total {
+  font-weight: bold;
+  border-top: 1px solid #333;
+  margin-top: 4px;
+  padding-top: 4px;
+}
+
+.print-footer {
+  text-align: center;
+  color: #666;
+  margin-top: 8px;
+}
+
+/* Print styles - hide everything except the bill */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .print-overlay,
+  .print-overlay * {
+    visibility: visible;
+  }
+
+  .print-overlay {
+    position: absolute;
+    inset: 0;
+    background: white;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-page {
+    box-shadow: none;
+    margin: 0;
+    width: 100% !important;
+  }
+}

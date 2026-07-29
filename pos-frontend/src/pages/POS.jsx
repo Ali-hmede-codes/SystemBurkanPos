@@ -1,9 +1,13 @@
 import { useState, useEffect } from 'react';
 import { storeService, productService, billService } from '../services/endpoints';
+import { useSettings } from '../context/SettingsContext';
+import PrintBill from '../components/PrintBill';
+import '../components/PrintBill.css';
 import toast from 'react-hot-toast';
 import './POS.css';
 
 export default function POS() {
+  const { t } = useSettings();
   const [stores, setStores] = useState([]);
   const [products, setProducts] = useState([]);
   const [selectedStore, setSelectedStore] = useState('');
@@ -12,6 +16,7 @@ export default function POS() {
   const [deliveryCost, setDeliveryCost] = useState('');
   const [notes, setNotes] = useState('');
   const [saving, setSaving] = useState(false);
+  const [printBill, setPrintBill] = useState(null);
 
   useEffect(() => { loadStores(); }, []);
   useEffect(() => { if (selectedStore) loadProducts(selectedStore); else setProducts([]); }, [selectedStore]);
@@ -56,7 +61,7 @@ export default function POS() {
 
     setSaving(true);
     try {
-      await billService.create({
+      const res = await billService.create({
         store_id: parseInt(selectedStore),
         customer_name: customer.name,
         customer_phone: customer.phone,
@@ -65,7 +70,9 @@ export default function POS() {
         notes,
         items: cart,
       });
-      toast.success('Bill saved successfully!');
+      toast.success(t.billSaved);
+      // Auto-print the bill
+      setPrintBill(res.data.data);
       setCart([]);
       setCustomer({ name: '', phone: '', address: '' });
       setDeliveryCost('');
@@ -148,9 +155,11 @@ export default function POS() {
         </div>
 
         <button className="btn-primary pos-save-btn" onClick={handleSaveBill} disabled={saving}>
-          {saving ? 'Saving...' : 'Save Bill'}
+          {saving ? t.saving : t.saveBill}
         </button>
       </div>
+
+      {printBill && <PrintBill bill={printBill} onClose={() => setPrintBill(null)} />}
     </div>
   );
 }
