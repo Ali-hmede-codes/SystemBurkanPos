@@ -1,16 +1,61 @@
+import { useEffect } from 'react';
 import { useSettings } from '../context/SettingsContext';
 
-const PAPER_STYLES = {
-  a4: { width: '210mm', minHeight: '297mm', padding: '20mm' },
-  a5: { width: '148mm', minHeight: '210mm', padding: '15mm' },
-  thermal80: { width: '80mm', minHeight: 'auto', padding: '5mm' },
-  thermal58: { width: '58mm', minHeight: 'auto', padding: '3mm' },
+const PAPER_SIZES = {
+  a4: { width: '210mm', height: '297mm', padding: '20mm' },
+  a5: { width: '148mm', height: '210mm', padding: '15mm' },
+  thermal80: { width: '80mm', height: 'auto', padding: '5mm' },
+  thermal58: { width: '58mm', height: 'auto', padding: '3mm' },
 };
 
 export default function PrintBill({ bill, onClose }) {
-  const { t, paperSize, isRTL } = useSettings();
-  const style = PAPER_STYLES[paperSize] || PAPER_STYLES.a4;
-  const isThermal = paperSize.startsWith('thermal');
+  const { t, paperSize, customSize, isRTL } = useSettings();
+
+  const getPageDimensions = () => {
+    if (paperSize === 'custom') {
+      return {
+        width: `${customSize.width}${customSize.unit}`,
+        height: `${customSize.height}${customSize.unit}`,
+        padding: '5mm',
+      };
+    }
+    return PAPER_SIZES[paperSize] || PAPER_SIZES.a4;
+  };
+
+  const dims = getPageDimensions();
+  const isThermal = paperSize.startsWith('thermal') || (paperSize === 'custom' && parseInt(customSize.width) <= 80);
+
+  // Inject @page CSS rule for auto paper size when printing
+  useEffect(() => {
+    const styleId = 'print-page-size-style';
+    let styleEl = document.getElementById(styleId);
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = styleId;
+      document.head.appendChild(styleEl);
+    }
+
+    const pageWidth = dims.width;
+    const pageHeight = dims.height === 'auto' ? '' : dims.height;
+    const sizeValue = pageHeight ? `${pageWidth} ${pageHeight}` : pageWidth;
+
+    styleEl.textContent = `
+      @page {
+        size: ${sizeValue};
+        margin: 0;
+      }
+      @media print {
+        .print-page {
+          width: ${pageWidth} !important;
+          padding: ${dims.padding} !important;
+        }
+      }
+    `;
+
+    return () => {
+      if (styleEl) styleEl.remove();
+    };
+  }, [dims]);
 
   const handlePrint = () => {
     window.print();
@@ -21,14 +66,14 @@ export default function PrintBill({ bill, onClose }) {
   return (
     <div className="print-overlay">
       <div className="print-controls no-print">
-        <button className="btn-primary" onClick={handlePrint}>{t.saveBill} & Print</button>
+        <button className="btn-primary" onClick={handlePrint}>🖨️ Print</button>
         <button className="btn-secondary" onClick={onClose}>{t.close}</button>
       </div>
 
       <div
         className="print-page"
         dir={isRTL ? 'rtl' : 'ltr'}
-        style={{ width: style.width, minHeight: style.minHeight, padding: style.padding }}
+        style={{ width: dims.width, minHeight: dims.height === 'auto' ? 'auto' : dims.height, padding: dims.padding }}
       >
         {/* Header */}
         <div className="print-header">
