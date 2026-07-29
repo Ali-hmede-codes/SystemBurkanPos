@@ -1,8 +1,8 @@
 -- POS System Database Schema
 -- Run this in phpMyAdmin or via: npm run migrate
 
-CREATE DATABASE IF NOT EXISTS pos_system;
-USE pos_system;
+CREATE DATABASE IF NOT EXISTS possystem;
+USE possystem;
 
 -- Users Table
 CREATE TABLE IF NOT EXISTS users (

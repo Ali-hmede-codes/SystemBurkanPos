@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'burkanpos-backend',
       script: './server.js',
-      cwd: '/var/www/burkanpos/backend',
+      cwd: '/root/SystemBurkanPos/pos-backend',
       instances: 1,
       autorestart: true,
       watch: false,
