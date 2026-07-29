@@ -10,12 +10,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Import Routes
+const authRoutes = require('./api/auth/auth.routes');
+const userRoutes = require('./api/users/users.routes');
 const storeRoutes = require('./api/stores/stores.routes');
 const categoryRoutes = require('./api/categories/categories.routes');
 const productRoutes = require('./api/products/products.routes');
 const billRoutes = require('./api/bills/bills.routes');
 
 // API Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/stores', storeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
