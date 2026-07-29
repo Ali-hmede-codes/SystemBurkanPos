@@ -90,11 +90,6 @@
 
 /* ===== PRINT STYLES ===== */
 @media print {
-  /* Hide everything */
-  body > *:not(#root) {
-    display: none !important;
-  }
-
   /* Reset body */
   html, body {
     margin: 0 !important;
@@ -104,15 +99,32 @@
     background: white !important;
   }
 
-  /* Hide sidebar, header, main content */
+  /* Hide everything in body except print overlay */
   .dashboard,
   .sidebar,
   .sidebar-overlay,
-  .mobile-header,
-  .main-content > *:not(.pos-page),
-  .pos-left,
-  .pos-right,
-  .pos-page {
+  .mobile-header {
+    display: none !important;
+  }
+
+  .main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Hide toast notifications */
+  [data-sonner-toaster],
+  [role="status"],
+  div[style*="z-index: 9999"] > div:not(.print-overlay),
+  .go4109123758,
+  [data-hot-toast],
+  div[class^="go"] {
+    display: none !important;
+  }
+
+  /* Hide POS page content but keep print-overlay visible */
+  .pos-page > .pos-left,
+  .pos-page > .pos-right {
     display: none !important;
   }
 
@@ -126,10 +138,7 @@
     height: auto !important;
     width: auto !important;
     inset: auto !important;
-  }
-
-  .print-overlay * {
-    visibility: visible !important;
+    z-index: auto !important;
   }
 
   .no-print {
@@ -154,6 +163,5 @@
   * {
     -ms-overflow-style: none !important;
     scrollbar-width: none !important;
-    overflow: visible !important;
   }
 }
