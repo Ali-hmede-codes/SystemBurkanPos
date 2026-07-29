@@ -181,3 +181,33 @@
   font-size: 1rem;
   font-weight: 600;
 }
+
+@media (max-width: 768px) {
+  .pos-page {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .pos-right {
+    max-height: none;
+  }
+
+  .product-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  }
+
+  .pos-delivery {
+    flex-direction: column;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .cart-item-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

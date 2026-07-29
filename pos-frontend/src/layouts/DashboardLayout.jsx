@@ -1,16 +1,20 @@
+import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiHome, FiShoppingBag, FiGrid, FiBox, FiFileText, FiUsers, FiLogOut, FiShoppingCart } from 'react-icons/fi';
+import { FiHome, FiShoppingBag, FiGrid, FiBox, FiFileText, FiUsers, FiLogOut, FiShoppingCart, FiMenu, FiX } from 'react-icons/fi';
 import './DashboardLayout.css';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
   };
+
+  const closeSidebar = () => setSidebarOpen(false);
 
   const navItems = [
     { to: '/dashboard', icon: <FiHome />, label: 'Dashboard', end: true },
@@ -27,13 +31,15 @@ export default function DashboardLayout() {
 
   return (
     <div className="dashboard">
-      <aside className="sidebar">
+      {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
+      <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <h2>POS System</h2>
+          <button className="sidebar-close" onClick={closeSidebar}><FiX /></button>
         </div>
         <nav className="sidebar-nav">
           {navItems.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+            <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`} onClick={closeSidebar}>
               {item.icon}
               <span>{item.label}</span>
             </NavLink>
@@ -50,6 +56,10 @@ export default function DashboardLayout() {
         </div>
       </aside>
       <main className="main-content">
+        <div className="mobile-header">
+          <button className="menu-btn" onClick={() => setSidebarOpen(true)}><FiMenu /></button>
+          <span>POS System</span>
+        </div>
         <Outlet />
       </main>
     </div>
