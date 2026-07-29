@@ -106,6 +106,8 @@
   margin-left: var(--sidebar-width);
   padding: 1.5rem;
   min-height: 100vh;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mobile-header {
@@ -141,6 +143,7 @@
 /* ===== MOBILE RESPONSIVE ===== */
 @media (max-width: 768px) {
   .sidebar {
+    width: min(var(--sidebar-width), 82vw);
     transform: translateX(-100%);
   }
 
