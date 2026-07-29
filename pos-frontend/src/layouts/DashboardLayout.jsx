@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FiHome, FiShoppingBag, FiGrid, FiBox, FiFileText, FiUsers, FiLogOut, FiShoppingCart, FiMenu, FiX } from 'react-icons/fi';
+import { useSettings } from '../context/SettingsContext';
+import { FiHome, FiShoppingBag, FiGrid, FiBox, FiFileText, FiUsers, FiLogOut, FiShoppingCart, FiMenu, FiX, FiSettings } from 'react-icons/fi';
 import './DashboardLayout.css';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
+  const { t } = useSettings();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -17,24 +19,26 @@ export default function DashboardLayout() {
   const closeSidebar = () => setSidebarOpen(false);
 
   const navItems = [
-    { to: '/dashboard', icon: <FiHome />, label: 'Dashboard', end: true },
-    { to: '/pos', icon: <FiShoppingCart />, label: 'POS (New Bill)' },
-    { to: '/bills', icon: <FiFileText />, label: 'Bills' },
-    { to: '/stores', icon: <FiShoppingBag />, label: 'Stores' },
-    { to: '/categories', icon: <FiGrid />, label: 'Categories' },
-    { to: '/products', icon: <FiBox />, label: 'Products' },
+    { to: '/dashboard', icon: <FiHome />, label: t.dashboard, end: true },
+    { to: '/pos', icon: <FiShoppingCart />, label: t.pos },
+    { to: '/bills', icon: <FiFileText />, label: t.bills },
+    { to: '/stores', icon: <FiShoppingBag />, label: t.stores },
+    { to: '/categories', icon: <FiGrid />, label: t.categories },
+    { to: '/products', icon: <FiBox />, label: t.products },
   ];
 
   if (user?.role === 'admin') {
-    navItems.push({ to: '/users', icon: <FiUsers />, label: 'Users' });
+    navItems.push({ to: '/users', icon: <FiUsers />, label: t.users });
   }
+
+  navItems.push({ to: '/settings', icon: <FiSettings />, label: t.settings });
 
   return (
     <div className="dashboard">
       {sidebarOpen && <div className="sidebar-overlay" onClick={closeSidebar} />}
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <h2>POS System</h2>
+          <h2>{t.appName}</h2>
           <button className="sidebar-close" onClick={closeSidebar}><FiX /></button>
         </div>
         <nav className="sidebar-nav">
@@ -58,7 +62,7 @@ export default function DashboardLayout() {
       <main className="main-content">
         <div className="mobile-header">
           <button className="menu-btn" onClick={() => setSidebarOpen(true)}><FiMenu /></button>
-          <span>POS System</span>
+          <span>{t.appName}</span>
         </div>
         <Outlet />
       </main>

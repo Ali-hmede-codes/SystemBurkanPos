@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { SettingsProvider } from './context/SettingsContext';
 import DashboardLayout from './layouts/DashboardLayout';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
@@ -10,6 +11,7 @@ import Products from './pages/Products';
 import POS from './pages/POS';
 import Bills from './pages/Bills';
 import Users from './pages/Users';
+import Settings from './pages/Settings';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -40,6 +42,7 @@ function AppRoutes() {
         <Route path="pos" element={<POS />} />
         <Route path="bills" element={<Bills />} />
         <Route path="users" element={<AdminRoute><Users /></AdminRoute>} />
+        <Route path="settings" element={<Settings />} />
       </Route>
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
@@ -49,10 +52,12 @@ function AppRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-      </AuthProvider>
+      <SettingsProvider>
+        <AuthProvider>
+          <AppRoutes />
+          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+        </AuthProvider>
+      </SettingsProvider>
     </BrowserRouter>
   );
 }
