@@ -16,6 +16,7 @@ const storeRoutes = require('./api/stores/stores.routes');
 const categoryRoutes = require('./api/categories/categories.routes');
 const productRoutes = require('./api/products/products.routes');
 const billRoutes = require('./api/bills/bills.routes');
+const statsRoutes = require('./api/stats/stats.routes');
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -24,6 +25,7 @@ app.use('/api/stores', storeRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/bills', billRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

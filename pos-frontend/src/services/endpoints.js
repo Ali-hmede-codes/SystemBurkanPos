@@ -49,3 +49,10 @@ export const userService = {
   resetPassword: (id, data) => api.put(`/users/${id}/reset-password`, data),
   delete: (id) => api.delete(`/users/${id}`),
 };
+
+export const statsService = {
+  getToday: () => api.get('/stats/today'),
+  getMonthly: (year) => api.get('/stats/monthly', { params: { year } }),
+  getDaily: (year, month) => api.get('/stats/daily', { params: { year, month } }),
+  getByStore: (startDate, endDate) => api.get('/stats/by-store', { params: { start_date: startDate, end_date: endDate } }),
+};
