@@ -88,31 +88,48 @@
   margin-top: 8px;
 }
 
-/* Print styles - hide everything except the bill */
+/* ===== PRINT STYLES ===== */
 @media print {
+  /* Hide everything */
+  body > *:not(#root) {
+    display: none !important;
+  }
+
+  /* Reset body */
   html, body {
-    height: auto !important;
-    overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
   }
 
-  body * {
-    visibility: hidden;
+  /* Hide sidebar, header, main content */
+  .dashboard,
+  .sidebar,
+  .sidebar-overlay,
+  .mobile-header,
+  .main-content > *:not(.pos-page),
+  .pos-left,
+  .pos-right,
+  .pos-page {
+    display: none !important;
   }
 
-  .print-overlay,
-  .print-overlay * {
-    visibility: visible;
-  }
-
+  /* Show only print overlay and bill */
   .print-overlay {
-    position: absolute;
-    inset: 0;
-    background: white;
-    padding: 0;
+    display: block !important;
+    position: static !important;
+    background: none !important;
+    padding: 0 !important;
     overflow: visible !important;
     height: auto !important;
+    width: auto !important;
+    inset: auto !important;
+  }
+
+  .print-overlay * {
+    visibility: visible !important;
   }
 
   .no-print {
@@ -120,10 +137,23 @@
   }
 
   .print-page {
-    box-shadow: none;
-    margin: 0;
-    overflow: visible !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 5mm !important;
     height: auto !important;
     min-height: auto !important;
+    overflow: visible !important;
+    page-break-inside: avoid;
+  }
+
+  /* Remove scrollbars */
+  *::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  * {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+    overflow: visible !important;
   }
 }
