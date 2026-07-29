@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { useSettings } from '../context/SettingsContext';
 
 const PAPER_SIZES = {
-  a4: { width: '210mm', height: '297mm', padding: '20mm' },
-  a5: { width: '148mm', height: '210mm', padding: '15mm' },
-  thermal80: { width: '80mm', height: 'auto', padding: '5mm' },
-  thermal58: { width: '58mm', height: 'auto', padding: '3mm' },
+  a4: { width: '210mm', height: '297mm', padding: '20mm', autoHeight: false },
+  a5: { width: '148mm', height: '210mm', padding: '15mm', autoHeight: false },
+  thermal80: { width: '80mm', height: 'auto', padding: '5mm', autoHeight: true },
+  thermal58: { width: '58mm', height: 'auto', padding: '3mm', autoHeight: true },
 };
 
 export default function PrintBill({ bill, onClose }) {
@@ -17,6 +17,7 @@ export default function PrintBill({ bill, onClose }) {
         width: `${customSize.width}${customSize.unit}`,
         height: `${customSize.height}${customSize.unit}`,
         padding: '5mm',
+        autoHeight: true, // custom always grows with content
       };
     }
     return PAPER_SIZES[paperSize] || PAPER_SIZES.a4;
@@ -36,8 +37,9 @@ export default function PrintBill({ bill, onClose }) {
     }
 
     const pageWidth = dims.width;
-    const pageHeight = dims.height === 'auto' ? '' : dims.height;
-    const sizeValue = pageHeight ? `${pageWidth} ${pageHeight}` : pageWidth;
+    const pageHeight = dims.autoHeight ? 'auto' : dims.height;
+    // For auto-height: only set width so paper grows with content
+    const sizeValue = pageHeight === 'auto' ? `${pageWidth}` : `${pageWidth} ${pageHeight}`;
 
     styleEl.textContent = `
       @page {
@@ -47,7 +49,10 @@ export default function PrintBill({ bill, onClose }) {
       @media print {
         .print-page {
           width: ${pageWidth} !important;
+          min-height: auto !important;
+          height: auto !important;
           padding: ${dims.padding} !important;
+          page-break-inside: avoid;
         }
       }
     `;
@@ -73,7 +78,7 @@ export default function PrintBill({ bill, onClose }) {
       <div
         className="print-page"
         dir={isRTL ? 'rtl' : 'ltr'}
-        style={{ width: dims.width, minHeight: dims.height === 'auto' ? 'auto' : dims.height, padding: dims.padding }}
+        style={{ width: dims.width, minHeight: dims.autoHeight ? 'auto' : dims.height, padding: dims.padding }}
       >
         {/* Header */}
         <div className="print-header">
