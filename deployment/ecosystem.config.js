@@ -1,9 +1,11 @@
+const path = require('path');
+
 module.exports = {
   apps: [
     {
       name: 'burkanpos-backend',
       script: './server.js',
-      cwd: '/root/SystemBurkanPos/pos-backend',
+      cwd: path.join(__dirname, '..', 'pos-backend'),
       instances: 1,
       autorestart: true,
       watch: false,
